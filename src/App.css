@@ -36,3 +36,22 @@
     transform: rotate(360deg);
   }
 }
+
+.addButton {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.listTable {
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
+.todoForm {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.todoButton {
+  text-align: center;
+}
