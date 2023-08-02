@@ -133,7 +133,7 @@ function App() {
         footer={null}
     >
       <Form
-        name="basic"
+        name="updateTodo"
         layout="horizontal"
         onFinish={handleUpdateOk}
         className='todoForm'
@@ -163,7 +163,7 @@ function App() {
         footer={null}
     >
       <Form
-        name="basic"
+        name="addTodo"
         layout="horizontal"
         onFinish={handleAddOk}
         className='todoForm'
