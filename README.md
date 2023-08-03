@@ -1,1 +1,59 @@
-# ts-code-test-frontend
+# Introduction
+Create an end-to-end web application that allows the user to read, create and delete a to-do list of duties of any kind. This project is for frontend.
+
+If you are interested in backend project, please refer to the [Github Repo](https://github.com/llkevin13579/ts-code-test-backend).
+
+# Prerequisites
+(1) [Node.js](https://nodejs.org/en)(Version>=16) installed on your operating system.
+
+(2) [Backend service](https://github.com/llkevin13579/ts-code-test-backend) and database are ready.
+
+# Install Dependencies
+```
+npm install
+```
+Or
+```
+yarn
+```
+
+# Running Service Locally
+
+Running with hot reload:
+```
+npm run start:dev
+```
+
+Running other environment locally:
+
+Update the database config in ``.env.qa`` or ``.env.preprod`` and then run the following command:
+```
+npm run build
+npm run start:qa / npm run start:preprod
+```
+> Due to the security issue, it's not recommended to run production in local. If you want to run production service, please refer to the next section of the document.
+
+# Running Service In the Server
+It's better to run with Docker container for non-local environment.
+
+## Build Docker Image
+```
+docker build -f Dockerfile.ENV_NAME -t ts-code-test-frontend:latest .
+```
+
+## Run Docker Container
+``` 
+docker run --rm \
+    --name ts-code-test-frontend \
+    -p 3000:3000 \
+    -e REACT_APP_BACKEND_BASE_URL=www.domain.com \
+    -d \
+    ts-code-test-fronted:latest
+```
+
+# Unit Test
+If you want to run unit test with [jest](https://jestjs.io/) and [@testing-library/react](https://www.npmjs.com/package/@testing-library/react), please run the following command:
+
+```
+npm run test
+```
