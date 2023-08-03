@@ -10,7 +10,7 @@ const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 
-const errorHandler = ({error}: {error:any}) => {
+const errorHandler = ({error}: {error:any}): React.JSX.Element => {
   return (<ErrorMessage message={error.message} />);
 }
 

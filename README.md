@@ -33,6 +33,8 @@ npm run start:qa / npm run start:preprod
 ```
 > Due to the security issue, it's not recommended to run production in local. If you want to run production service, please refer to the next section of the document.
 
+The website will host on http://localhost:3000
+
 # Running Service In the Server
 It's better to run with Docker container for non-local environment.
 

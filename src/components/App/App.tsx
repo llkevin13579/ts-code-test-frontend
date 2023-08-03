@@ -1,4 +1,5 @@
 import './App.css';
+import React from 'react';
 import { useState, useEffect, useRef, RefObject } from 'react';
 import { Space, Table, Button, Typography, Modal, Input, Form } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
@@ -12,7 +13,7 @@ function App() {
     id: number,
     title: string;
   };
-
+  const { showBoundary } = useErrorBoundary();
   const [isOpenAddTodoModal, setIsOpenAddTodoModal] = useState(false);
   const [isOpenUpdateTodoModal, setIsOpenUpdateTodoModal] = useState(false);
   const [isOpenDeleteTodoModal, setIsOpenDeleteTodoModal] = useState(false);
@@ -23,12 +24,10 @@ function App() {
   const [newTitle, setNewTitle] = useState('');
   const [todoData, setTodoData] = useState([]);
   const [currentId, setCurrentId] = useState(0);
-  const { showBoundary } = useErrorBoundary();
   const newTitleInputRef: RefObject<any> = useRef();
   const updateTitleInputRef: RefObject<any> = useRef();
-
   useEffect(() => {
-    findTodoList().catch((error) => {showBoundary(error)});
+    findTodoList().catch((error) => showBoundary(error));
   }, []);
   
   const columns: ColumnsType<DataType> = [
@@ -78,10 +77,10 @@ function App() {
       data: {
         title: newTitle
       },
-    }).catch((error) => showBoundary(error));;
+    }).catch((error) => showBoundary(error));
     setIsAddTodoConfirmLoading(false);
     setIsOpenAddTodoModal(false);
-    await findTodoList().catch((error) => {showBoundary(error)});
+    await findTodoList().catch((error) => showBoundary(error));
   }
 
   const handleUpdateOk = async ():Promise<void> => {
@@ -96,7 +95,7 @@ function App() {
     }).catch((error) => showBoundary(error));
     setIsUpdateTodoConfirmLoading(false);
     setIsOpenUpdateTodoModal(false);
-    await findTodoList().catch((error) => {showBoundary(error)});
+    await findTodoList().catch((error) => showBoundary(error));
   }
 
   const handleAddTodoCancel = ():void => {
@@ -121,15 +120,15 @@ function App() {
     setNewTitle(e.target.value);
   }
 
-  const onChangeNewTitleForUpdate = (e: any) => {
+  const onChangeNewTitleForUpdate = (e: any): void => {
     setNewTitleForUpdate(e.target.value);
   }
 
-  const handleUpdateTodoCancel = () => {
+  const handleUpdateTodoCancel = (): void => {
     setIsOpenUpdateTodoModal(false);
   }
 
-  const updateTodoModal = (
+  const updateTodoModal: React.JSX.Element = (
     <Modal
         title="Update Todo"
         open={isOpenUpdateTodoModal}
@@ -163,7 +162,7 @@ function App() {
     </Modal>
   )
 
-  const addTodoModal = (
+  const addTodoModal: React.JSX.Element = (
     <Modal
         title="Add Todo"
         open={isOpenAddTodoModal}
@@ -206,14 +205,14 @@ function App() {
     }).catch((error) => showBoundary(error));
     setIsDeleteTodoConfirmLoading(false);
     setIsOpenDeleteTodoModal(false);
-    await findTodoList().catch((error) => {showBoundary(error)});
+    await findTodoList().catch((error) => showBoundary(error));
   }
 
-  const handleDeleteTodoCancel =() => {
+  const handleDeleteTodoCancel = (): void => {
     setIsOpenDeleteTodoModal(false);
   }
   
-  const deleteTodoModal = (
+  const deleteTodoModal: React.JSX.Element = (
     <Modal
         title="Delete Todo"
         open={isOpenDeleteTodoModal}
@@ -225,7 +224,7 @@ function App() {
     </Modal>
   )
 
-  const todoList = (
+  const todoList: React.JSX.Element = (
       <div>
         <Button className="addButton" type="primary" onClick={addTodo}>Add</Button>
         <Table className="listTable" columns={columns} dataSource={todoData} pagination={false} />

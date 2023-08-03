@@ -1,7 +1,7 @@
 import React from 'react';
 import { Alert, Space, Button } from 'antd';
 
-const ErrorMessage = ({message}: {message: string}) => {
+const ErrorMessage = ({message}: {message: string}): React.JSX.Element => {
     const reload = (e: any) => {
         window.location.reload();
     }
