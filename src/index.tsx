@@ -1,16 +1,25 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import App from './App';
+import App from './components/App/App';
 import reportWebVitals from './reportWebVitals';
+import { ErrorBoundary } from "react-error-boundary";
+import ErrorMessage from './components/ErrorMessage/ErrorMessage';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
+
+const errorHandler = ({error}: {error:any}) => {
+  return (<ErrorMessage message={error.message} />);
+}
+
 root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
+  <ErrorBoundary FallbackComponent={errorHandler}>
+    <React.StrictMode>
+        <App />
+    </React.StrictMode>
+  </ErrorBoundary>
 );
 
 // If you want to start measuring performance in your app, pass a function

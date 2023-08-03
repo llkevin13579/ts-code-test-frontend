@@ -2,12 +2,13 @@ import './App.css';
 import { useState, useEffect } from 'react';
 import { Space, Table, Button, Typography, Modal, Input, Form } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
+import { useErrorBoundary } from "react-error-boundary";
 const { Title, Text } = Typography;
 
 function App() {
   interface DataType {
-    key: number,
+    key?: number,
     id: number,
     title: string;
   };
@@ -22,9 +23,10 @@ function App() {
   const [newTitle, setNewTitle] = useState('');
   const [todoData, setTodoData] = useState([]);
   const [currentId, setCurrentId] = useState(0);
-
+  const { showBoundary } = useErrorBoundary();
+  
   useEffect(() => {
-    findTodoList();
+    findTodoList().catch((error) => {showBoundary(error)});
   }, []);
   
   const columns: ColumnsType<DataType> = [
@@ -54,46 +56,45 @@ function App() {
   }
 
   const findTodoList = async (): Promise<void> => {
-    const result = await axios.request({
-      baseURL: 'http://127.0.0.1:4200',
-      url: '/api/v1/todos',
-      method: 'get',
-    });
-    const data = result.data;
-    data.map((todo: DataType) => todo.key = todo.id);
-    setTodoData(result.data);
+      const result: AxiosResponse = await axios.request({
+        baseURL: process.env.REACT_APP_BACKEND_BASE_URL,
+        url: '/api/v1/todos',
+        method: 'get',
+      });
+      result.data.map((todo: DataType) => todo.key = todo.id);
+      setTodoData(result.data);
   };
 
   const handleAddOk = async ():Promise<void> => {
     setIsAddTodoConfirmLoading(true);
     await axios.request({
-      baseURL: 'http://127.0.0.1:4200',
+      baseURL: process.env.REACT_APP_BACKEND_BASE_URL,
       url: '/api/v1/todos',
       method: 'post',
       data: {
         title: newTitle
       },
-    });
+    }).catch((error) => showBoundary(error));;
     setIsAddTodoConfirmLoading(false);
     setIsOpenAddTodoModal(false);
     setNewTitle('');
-    await findTodoList();
+    await findTodoList().catch((error) => {showBoundary(error)});
   }
 
   const handleUpdateOk = async ():Promise<void> => {
     setIsUpdateTodoConfirmLoading(true);
     await axios.request({
-      baseURL: 'http://127.0.0.1:4200',
+      baseURL: process.env.REACT_APP_BACKEND_BASE_URL,
       url: `/api/v1/todos/${currentId}`,
       method: 'put',
       data: {
         title: newTitleForUpdate
       },
-    });
+    }).catch((error) => showBoundary(error));
     setIsUpdateTodoConfirmLoading(false);
     setIsOpenUpdateTodoModal(false);
     setNewTitleForUpdate('');
-    await findTodoList();
+    await findTodoList().catch((error) => {showBoundary(error)});
   }
 
   const handleAddTodoCancel = ():void => {
@@ -187,13 +188,13 @@ function App() {
   const handleDeleteTodoOk = async (): Promise<void> => {
     setIsDeleteTodoConfirmLoading(true);
     await axios.request({
-      baseURL: 'http://127.0.0.1:4200',
+      baseURL: process.env.REACT_APP_BACKEND_BASE_URL,
       url: `/api/v1/todos/${currentId}`,
       method: 'delete'
-    })
+    }).catch((error) => showBoundary(error));
     setIsDeleteTodoConfirmLoading(false);
     setIsOpenDeleteTodoModal(false);
-    await findTodoList();
+    await findTodoList().catch((error) => {showBoundary(error)});
   }
 
   const handleDeleteTodoCancel =() => {
@@ -212,13 +213,17 @@ function App() {
     </Modal>
   )
 
-  return (
-    <div className="App">
-      <Title level={2}>Todo List</Title>
+  const todoList = (
       <div>
         <Button className="addButton" type="primary" onClick={addTodo}>Add</Button>
         <Table className="listTable" columns={columns} dataSource={todoData} pagination={false} />
       </div>
+  )
+
+  return (
+    <div className="App">
+      <Title level={2}>Todo List</Title>
+      {todoList}
       {addTodoModal}
       {deleteTodoModal}
       {updateTodoModal}
