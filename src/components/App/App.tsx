@@ -1,5 +1,5 @@
 import './App.css';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, RefObject } from 'react';
 import { Space, Table, Button, Typography, Modal, Input, Form } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import axios, { AxiosResponse } from 'axios';
@@ -24,7 +24,9 @@ function App() {
   const [todoData, setTodoData] = useState([]);
   const [currentId, setCurrentId] = useState(0);
   const { showBoundary } = useErrorBoundary();
-  
+  const newTitleInputRef: RefObject<any> = useRef();
+  const updateTitleInputRef: RefObject<any> = useRef();
+
   useEffect(() => {
     findTodoList().catch((error) => {showBoundary(error)});
   }, []);
@@ -51,8 +53,10 @@ function App() {
   ];
 
   const addTodo = ():void => {
-    setNewTitle('');
     setIsOpenAddTodoModal(true);
+    if (newTitleInputRef.current) {
+      newTitleInputRef.current.setFieldsValue({Title: ''});
+    }
   }
 
   const findTodoList = async (): Promise<void> => {
@@ -77,7 +81,6 @@ function App() {
     }).catch((error) => showBoundary(error));;
     setIsAddTodoConfirmLoading(false);
     setIsOpenAddTodoModal(false);
-    setNewTitle('');
     await findTodoList().catch((error) => {showBoundary(error)});
   }
 
@@ -93,22 +96,23 @@ function App() {
     }).catch((error) => showBoundary(error));
     setIsUpdateTodoConfirmLoading(false);
     setIsOpenUpdateTodoModal(false);
-    setNewTitleForUpdate('');
     await findTodoList().catch((error) => {showBoundary(error)});
   }
 
   const handleAddTodoCancel = ():void => {
-    setNewTitle('');
     setIsOpenAddTodoModal(false);
   }
 
   const openUpdateTodoModal = (id: number, title: string):void => {
     setCurrentId(id);
-    setNewTitleForUpdate(title);
     setIsOpenUpdateTodoModal(true);
+    setNewTitleForUpdate(title);
+    if (updateTitleInputRef.current) {
+      updateTitleInputRef.current.setFieldsValue({Title: title})
+    }
   }
 
-  const openDeleteTodoModal = async(id: any):Promise<void> => {
+  const openDeleteTodoModal = async(id: number):Promise<void> => {
     setCurrentId(id);
     setIsOpenDeleteTodoModal(true);
   }
@@ -138,6 +142,10 @@ function App() {
         layout="horizontal"
         onFinish={handleUpdateOk}
         className='todoForm'
+        initialValues={{
+          Title: newTitleForUpdate
+        }}
+        ref={updateTitleInputRef}
       >
         <Form.Item
           label="Title"
@@ -168,13 +176,17 @@ function App() {
         layout="horizontal"
         onFinish={handleAddOk}
         className='todoForm'
+        initialValues={{
+          Title: ''
+        }}
+        ref={newTitleInputRef}
       >
         <Form.Item
           label="Title"
           name="Title"
           rules={[{ required: true, min: 1, max: 100, message: 'Please enter the title' }]}
         >
-          <Input showCount={true} maxLength={100} onChange={onChangeNewTitle} value={newTitle} />
+          <Input showCount={true} maxLength={100} onChange={onChangeNewTitle} value={newTitle}/>
         </Form.Item>
         <Form.Item className='todoButton'>
           <Button type="primary" htmlType="submit" loading={isAddTodoConfirmLoading}>
