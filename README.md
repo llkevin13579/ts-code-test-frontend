@@ -61,3 +61,10 @@ If you want to run unit test with [jest](https://jestjs.io/) and [@testing-libra
 npm run test
 ```
 
+Running with coverage report. 
+
+The result will generate to ``/coverage`` folder and then you could check the report in ``/coverage/lcov-report/index.html``
+```
+npm run test:cov
+```
+
