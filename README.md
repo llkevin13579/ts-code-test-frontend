@@ -46,10 +46,11 @@ docker build -f Dockerfile.ENV_NAME -t ts-code-test-frontend:latest .
 docker run --rm \
     --name ts-code-test-frontend \
     -p 3000:3000 \
-    -e REACT_APP_BACKEND_BASE_URL=www.domain.com \
     -d \
-    ts-code-test-fronted:latest
+    ts-code-test-frontend:latest
 ```
+
+Alternatively, we could also host frontend project in Object Storage Service for cloud service after building service, such as AWS S3.
 
 # Unit Test
 If you want to run unit test with [jest](https://jestjs.io/) and [@testing-library/react](https://www.npmjs.com/package/@testing-library/react), please run the following command:
@@ -57,3 +58,4 @@ If you want to run unit test with [jest](https://jestjs.io/) and [@testing-libra
 ```
 npm run test
 ```
+

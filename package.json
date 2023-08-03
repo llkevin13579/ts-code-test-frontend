@@ -24,9 +24,11 @@
     "start:dev": "env-cmd -f .env.local react-scripts start",
     "start:qa": "env-cmd -f .env.qa react-scripts start",
     "start:preprod": "env-cmd -f .env.preprod react-scripts start",
+    "start:prod": "env-cmd -f .env.prod eact-scripts start",
     "build:dev": "env-cmd -f .env.local react-scripts build",
     "build:qa": "env-cmd -f .env.qa react-scripts build",
     "build:preprod": "env-cmd -f .env.preprod react-scripts build",
+    "build:prod": "env-cmd -f .env.prod react-scripts build",
     "test": "env-cmd -f .env.local react-scripts test"
   },
   "eslintConfig": {
